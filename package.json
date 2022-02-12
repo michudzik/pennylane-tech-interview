@@ -1,6 +1,9 @@
 {
   "name": "app",
   "private": "true",
+  "scripts": {
+    "build": "esbuild app/javascript/application.tsx --bundle --sourcemap --outdir=app/assets/builds"
+  },
   "dependencies": {
     "@hotwired/stimulus": "^3.0.1",
     "@hotwired/turbo-rails": "^7.1.1",
