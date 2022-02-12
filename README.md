@@ -1,7 +1,16 @@
 ## Setup
 
-- Ruby 3.0.0
-- (If applicable) `menulane` gemset
+### Requirements
+- Ruby 3
+- Node.js 14.15
+
+### Procedure
+```
+$ bundle install
+$ yarn install
+$ yarn build
+$ bundle exec rails s
+```
 
 ## System dependencies
 
