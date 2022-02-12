@@ -12,3 +12,8 @@
 ```bash
 $ bundle exec rails db:create
 ```
+
+## Deployment
+
+Heroku has been configured to automatically deploy the `main` branch on
+merge.
