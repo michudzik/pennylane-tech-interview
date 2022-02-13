@@ -1,11 +1,12 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import Recipes from "./components/Recipes";
 
 const App = () => {
-  return (<div>Hello, Rails 7!</div>)
-}
+  return <Recipes />;
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-  const rootEl = document.getElementById('app')
-  ReactDOM.render(<App />, rootEl)
-})
+document.addEventListener("DOMContentLoaded", () => {
+  const rootEl = document.getElementById("app");
+  ReactDOM.render(<App />, rootEl);
+});
