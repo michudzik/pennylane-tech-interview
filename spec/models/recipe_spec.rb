@@ -7,6 +7,7 @@ RSpec.describe Recipe, type: :model do
         [
           'id',
           'author_id',
+          'image_id',
           'prep_time',
           'cook_time',
           'total_time',
