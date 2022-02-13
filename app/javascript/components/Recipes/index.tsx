@@ -2,25 +2,45 @@ import React, { useState, useEffect } from "react";
 import Recipe from "./types/recipe";
 import Row from "./Row";
 
+const budgetValues = ['cheap', 'reasonable', 'expensive'];
+const recipesUrl = '/api/recipes';
+
 const Recipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [budgetFilters, setBudgetFilters] = useState<boolean[]>(new Array(budgetValues.length).fill(false));
 
-  useEffect(() => {
+  const constructUrl = () => {
+    const query = [];
+
+    budgetFilters.forEach((value, index) => {
+      if (value === true) {
+        query.push(`budget[]=${budgetValues[index]}`)
+      }
+    })
+
+    if (query.length === 0) {
+      return recipesUrl
+    }
+
+    return `${recipesUrl}?${query.join('&')}`
+  }
+
+  const fetchData = async () => {
     setIsLoading(true);
-    fetch("/api/recipes")
-      .then((res) => res.json())
-      .then(
-        (result: Recipe[]) => {
-          setRecipes(result);
-          setIsLoading(false);
-        },
-        (error: string) => {
-          setIsLoading(false);
-          setError(error);
-        }
-      );
+    try {
+      const result = await fetch(constructUrl())
+      setRecipes(await result.json());
+      setIsLoading(false);
+    } catch(error) {
+      setIsLoading(false);
+      setError(error);
+    }
+  }
+
+  useEffect(async () => {
+    await fetchData();
   }, []);
 
   const shouldDiplayLoader = () => isLoading && !error;
@@ -28,7 +48,38 @@ const Recipes = () => {
   const shouldDisplayTable = () =>
     !shouldDiplayLoader() && !shouldDisplayError();
 
+  const handleOnChange = (index: number) => {
+    const updatedBugetFilters = budgetFilters.map((item, idx) =>
+      idx === index ? !item : item
+    );
+
+    setBudgetFilters(updatedBugetFilters);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetchData();
+  }
+
   return (
+    <>
+    <form onSubmit={handleSubmit}>
+      {budgetValues.map((value: string, index: number) => (
+        <>
+        <input
+          type="checkbox"
+          id={`budget-checkbox-${index}`}
+          name={value}
+          value={value}
+          checked={budgetFilters[index]}
+          onChange={() => handleOnChange(index)}
+          />
+          <label htmlFor={`budget-checkbox-${index}`}>{value}</label>
+        </>
+      ))}
+      <input type="submit" />
+    </form>
     <table>
       <thead>
         <tr>
@@ -62,6 +113,7 @@ const Recipes = () => {
           recipes.map((recipe: Recipe) => <Row recipe={recipe} />)}
       </tbody>
     </table>
+    </>
   );
 };
 
