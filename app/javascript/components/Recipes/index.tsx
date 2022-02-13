@@ -10,6 +10,7 @@ const Recipes = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [budgetFilters, setBudgetFilters] = useState<boolean[]>(new Array(budgetValues.length).fill(false));
+  const [ingredientQuery, setingredientQuery] = useState<string>('');
 
   const constructUrl = () => {
     const query = [];
@@ -20,8 +21,12 @@ const Recipes = () => {
       }
     })
 
+    if(ingredientQuery && ingredientQuery !== '') {
+      query.push(`ingredients=${ingredientQuery}`)
+    }
+
     if (query.length === 0) {
-      return recipesUrl
+      return recipesUrl;
     }
 
     return `${recipesUrl}?${query.join('&')}`
@@ -48,12 +53,16 @@ const Recipes = () => {
   const shouldDisplayTable = () =>
     !shouldDiplayLoader() && !shouldDisplayError();
 
-  const handleOnChange = (index: number) => {
+  const handleBudgetFilterChange = (index: number) => {
     const updatedBugetFilters = budgetFilters.map((item, idx) =>
       idx === index ? !item : item
     );
 
     setBudgetFilters(updatedBugetFilters);
+  }
+
+  const handleSearchChange = (value: string) => {
+    setingredientQuery(value)
   }
 
   const handleSubmit = (e) => {
@@ -65,20 +74,32 @@ const Recipes = () => {
   return (
     <>
     <form onSubmit={handleSubmit}>
-      {budgetValues.map((value: string, index: number) => (
-        <>
-        <input
-          type="checkbox"
-          id={`budget-checkbox-${index}`}
-          name={value}
-          value={value}
-          checked={budgetFilters[index]}
-          onChange={() => handleOnChange(index)}
+      <div>
+        {budgetValues.map((value: string, index: number) => (
+          <>
+          <input
+            type="checkbox"
+            id={`budget-checkbox-${index}`}
+            name={value}
+            value={value}
+            checked={budgetFilters[index]}
+            onChange={() => handleBudgetFilterChange(index)}
+            />
+            <label htmlFor={`budget-checkbox-${index}`}>{value}</label>
+          </>
+        ))}
+      </div>
+      <div>
+        <label>Search by ingredients (comma separated, eg: "onion, bread, ...")
+          <input
+            type="text"
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
-          <label htmlFor={`budget-checkbox-${index}`}>{value}</label>
-        </>
-      ))}
-      <input type="submit" />
+        </label>
+      </div>
+      <div>
+        <input type="submit" />
+      </div>
     </form>
     <table>
       <thead>

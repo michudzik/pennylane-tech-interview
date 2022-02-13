@@ -2,6 +2,7 @@ module Api
   class RecipesController < BaseController
     def index
       recipe_scope = filter_service.call(scope, permitted_params)
+      recipe_scope = search_service.call(recipe_scope, permitted_params)
 
       render :index, locals: { recipes: recipe_presenter.call(recipe_scope) }
     end
@@ -20,8 +21,12 @@ module Api
       ::Recipes::FilterService.new
     end
 
+    def search_service
+      ::Recipes::SearchService.new
+    end
+
     def permitted_params
-      params.permit(budget: [])
+      params.permit(:ingredients, budget: [])
     end
   end
 end
