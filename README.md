@@ -33,3 +33,21 @@ _If that does not work, please `gem install foreman` or `./bin/dev` without the 
 
 Heroku has been configured to automatically deploy the `main` branch on
 merge.
+
+## Deliverables
+### Repository
+https://github.com/michudzik/fictional-tribble
+
+### User stories
+- As a user, I would like to be able to see all of the recipes, so that I can search for those, which interest me.
+- As a user, I would like to be able to choose recipes based on my budget, so that I look only at those, which are affordable for me.
+- As a user, I would like to be able to search through recipes by providing a list of ingredients which I have in my home.
+- As a user, I would like to be able to filter recipes by the difficulty level, so that I can feel comfortable, while preparing food.
+https://github.com/michudzik/fictional-tribble/pull/11
+
+### Database structure
+Database's structure alongside some of the decisions, which I've taken is described here: https://github.com/michudzik/fictional-tribble/pull/9
+
+### Application
+Hosted on Heroku: https://shielded-wave-40691.herokuapp.com/
+Manual for setup up on local environment: https://github.com/michudzik/fictional-tribble/blob/main/README.md
