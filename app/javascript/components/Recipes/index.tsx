@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Recipe from "./types/recipe";
 import Table from "./Table";
-
-const budgetValues = ["cheap", "reasonable", "expensive"];
-const recipesUrl = "/api/recipes";
+import { budgetValues, recipesUrl } from "./utils";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
