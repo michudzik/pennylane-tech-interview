@@ -16,7 +16,7 @@ const Recipes = () => {
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const constructUrl = () => {
+  const constructUrl = (page: number) => {
     const query = [];
 
     budgetFilters.forEach((value, index) => {
@@ -33,15 +33,15 @@ const Recipes = () => {
       query.push(`difficulty=${difficulty}`);
     }
 
-    query.push(`page=${currentPage}`);
+    query.push(`page=${page}`);
 
     return `${recipesUrl}?${query.join("&")}`;
   };
 
-  const fetchData = async () => {
+  const fetchData = async (page: number) => {
     setIsLoading(true);
     try {
-      const result = await fetch(constructUrl());
+      const result = await fetch(constructUrl(page));
       const { pagination, recipes } = await result.json();
       setPageCount(pagination.pages);
       setRecipes(recipes);
@@ -53,7 +53,7 @@ const Recipes = () => {
   };
 
   useEffect(async () => {
-    await fetchData();
+    await fetchData(currentPage);
   }, [currentPage]);
 
   const shouldDiplayLoader = () => isLoading && !error;
@@ -80,7 +80,7 @@ const Recipes = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetchData();
+    fetchData(1);
   };
 
   const handlePageChange = (value) => {
