@@ -6,6 +6,7 @@ RSpec.describe Api::RecipesController, type: :request do
     let(:search_service) { instance_double('Recipes::SearchService', :search_service) }
 
     before do
+      allow_any_instance_of(described_class).to receive(:pagy).and_return([{}, []])
       allow(Recipes::FilterService).to receive(:new).and_return(filter_service)
       allow(Recipes::SearchService).to receive(:new).and_return(search_service)
       allow(filter_service).to receive(:call).and_return([])
