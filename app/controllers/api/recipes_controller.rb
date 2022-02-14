@@ -26,7 +26,7 @@ module Api
     end
 
     def permitted_params
-      params.permit(:ingredients, budget: [])
+      params.permit(:ingredients, :difficulty, budget: [])
     end
   end
 end

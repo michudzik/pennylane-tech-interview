@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Recipe from "./types/recipe";
 import Table from "./Table";
-import { budgetValues, recipesUrl } from "./utils";
+import { budgetValues, difficultyValues, recipesUrl } from "./utils";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -11,6 +11,7 @@ const Recipes = () => {
     new Array(budgetValues.length).fill(false)
   );
   const [ingredientQuery, setingredientQuery] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<string>("all");
 
   const constructUrl = () => {
     const query = [];
@@ -23,6 +24,10 @@ const Recipes = () => {
 
     if (ingredientQuery && ingredientQuery !== "") {
       query.push(`ingredients=${ingredientQuery}`);
+    }
+
+    if (difficulty && difficulty !== "all") {
+      query.push(`difficulty=${difficulty}`);
     }
 
     if (query.length === 0) {
@@ -61,6 +66,10 @@ const Recipes = () => {
     setBudgetFilters(updatedBugetFilters);
   };
 
+  const handleDifficultyFilterChange = (value: string) => {
+    setDifficulty(value);
+  };
+
   const handleSearchChange = (value: string) => {
     setingredientQuery(value);
   };
@@ -87,6 +96,21 @@ const Recipes = () => {
               />
               <label htmlFor={`budget-checkbox-${index}`}>{value}</label>
             </>
+          ))}
+        </div>
+        <div>
+          {difficultyValues.map((value: string) => (
+            <div>
+              <input
+                id={`difficulty-radio-${value}`}
+                type="radio"
+                value={value}
+                checked={value === difficulty}
+                name="difficulty"
+                onChange={(e) => handleDifficultyFilterChange(e.target.value)}
+              />
+              <label htmlFor={`difficulty-radio-${value}`}>{value}</label>
+            </div>
           ))}
         </div>
         <div>
