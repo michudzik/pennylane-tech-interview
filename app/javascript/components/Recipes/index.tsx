@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactPaginate from "react-paginate";
 import Recipe from "./types/recipe";
 import Table from "./Table";
 import { budgetValues, difficultyValues, recipesUrl } from "./utils";
@@ -12,6 +13,8 @@ const Recipes = () => {
   );
   const [ingredientQuery, setingredientQuery] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("all");
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const constructUrl = () => {
     const query = [];
@@ -30,9 +33,7 @@ const Recipes = () => {
       query.push(`difficulty=${difficulty}`);
     }
 
-    if (query.length === 0) {
-      return recipesUrl;
-    }
+    query.push(`page=${currentPage}`);
 
     return `${recipesUrl}?${query.join("&")}`;
   };
@@ -41,7 +42,9 @@ const Recipes = () => {
     setIsLoading(true);
     try {
       const result = await fetch(constructUrl());
-      setRecipes(await result.json());
+      const { pagination, recipes } = await result.json();
+      setPageCount(pagination.pages);
+      setRecipes(recipes);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -51,7 +54,7 @@ const Recipes = () => {
 
   useEffect(async () => {
     await fetchData();
-  }, []);
+  }, [currentPage]);
 
   const shouldDiplayLoader = () => isLoading && !error;
   const shouldDisplayError = () => !isLoading && error;
@@ -78,6 +81,10 @@ const Recipes = () => {
     e.preventDefault();
 
     fetchData();
+  };
+
+  const handlePageChange = (value) => {
+    setCurrentPage(value + 1);
   };
 
   return (
@@ -126,9 +133,24 @@ const Recipes = () => {
           <input type="submit" />
         </div>
       </form>
+
       {shouldDiplayLoader() && <div>Loading...</div>}
       {shouldDisplayError() && <div>{error}</div>}
-      {shouldDisplayTable() && <Table recipes={recipes} />}
+      {shouldDisplayTable() && (
+        <>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={(e) => handlePageChange(e.selected)}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            forcePage={currentPage - 1 }
+            previousLabel="< previous"
+            renderOnZeroPageCount={null}
+          />
+          <Table recipes={recipes} />
+        </>
+      )}
     </>
   );
 };
