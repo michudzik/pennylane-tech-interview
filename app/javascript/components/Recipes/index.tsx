@@ -5,6 +5,10 @@ import Table from "./Table";
 import Form from "./Form";
 import { budgetValues, recipesUrl } from "./utils";
 
+const initialPageCount = 0;
+const initialPage = 1;
+const displayedPageRange = 5;
+
 const Recipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -14,8 +18,8 @@ const Recipes = () => {
   );
   const [ingredientQuery, setingredientQuery] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("all");
-  const [pageCount, setPageCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(initialPageCount);
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   const constructUrl = (page: number) => {
     const query = [];
@@ -106,7 +110,7 @@ const Recipes = () => {
             breakLabel="..."
             nextLabel="next >"
             onPageChange={(e) => handlePageChange(e.selected)}
-            pageRangeDisplayed={5}
+            pageRangeDisplayed={displayedPageRange}
             pageCount={pageCount}
             forcePage={currentPage - 1}
             previousLabel="< previous"
