@@ -1,7 +1,6 @@
 import React from "react";
 import Row from "./Row";
 import Recipe from "../types/recipe";
-import "./index.css";
 
 const Table = ({ recipes }: { recipes: Recipe[] }) => {
   return (
