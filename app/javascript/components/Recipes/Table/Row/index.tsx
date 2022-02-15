@@ -1,7 +1,7 @@
 import React from "react";
-import Recipe from "../types/recipe";
-import Ingredient from "../types/ingredient";
-import Tag from "../types/tag";
+import Recipe from "../../types/recipe";
+import Ingredient from "../../types/ingredient";
+import Tag from "../../types/tag";
 
 const Row = ({ recipe }: { recipe: Recipe }) => {
   return (
