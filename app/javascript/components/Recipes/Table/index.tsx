@@ -1,6 +1,7 @@
 import React from "react";
 import Row from "./Row";
 import Recipe from "../types/recipe";
+import "./index.css";
 
 const Table = ({ recipes }: { recipes: Recipe[] }) => {
   return (
@@ -8,18 +9,18 @@ const Table = ({ recipes }: { recipes: Recipe[] }) => {
       <thead>
         <tr>
           <th></th>
-          <th>Name</th>
-          <th>Author</th>
-          <th>Tip</th>
-          <th>Difficulty</th>
-          <th>Budget</th>
-          <th>Rate</th>
-          <th>Quantity of people</th>
-          <th>Prep time</th>
-          <th>Cook time</th>
-          <th>Total time</th>
-          <th>Ingredients</th>
-          <th>Tags</th>
+          <th class="align-left">Name</th>
+          <th class="align-left">Author</th>
+          <th class="align-left">Tip</th>
+          <th class="align-left">Difficulty</th>
+          <th class="align-left">Budget</th>
+          <th class="align-right">Rate</th>
+          <th class="align-right">Quantity of people</th>
+          <th class="align-right">Prep time</th>
+          <th class="align-right">Cook time</th>
+          <th class="align-right">Total time</th>
+          <th class="align-left">Ingredients</th>
+          <th class="align-left">Tags</th>
         </tr>
       </thead>
       <tbody>
