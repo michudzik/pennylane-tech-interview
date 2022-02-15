@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import Recipe from "./types/recipe";
 import Table from "./Table";
-import { budgetValues, difficultyValues, recipesUrl } from "./utils";
+import Form from "./Form";
+import { budgetValues, recipesUrl } from "./utils";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -89,51 +90,14 @@ const Recipes = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <div>
-          {budgetValues.map((value: string, index: number) => (
-            <>
-              <input
-                type="checkbox"
-                id={`budget-checkbox-${index}`}
-                name={value}
-                value={value}
-                checked={budgetFilters[index]}
-                onChange={() => handleBudgetFilterChange(index)}
-              />
-              <label htmlFor={`budget-checkbox-${index}`}>{value}</label>
-            </>
-          ))}
-        </div>
-        <div>
-          {difficultyValues.map((value: string) => (
-            <div>
-              <input
-                id={`difficulty-radio-${value}`}
-                type="radio"
-                value={value}
-                checked={value === difficulty}
-                name="difficulty"
-                onChange={(e) => handleDifficultyFilterChange(e.target.value)}
-              />
-              <label htmlFor={`difficulty-radio-${value}`}>{value}</label>
-            </div>
-          ))}
-        </div>
-        <div>
-          <label>
-            Search by ingredients (comma separated, eg: "onion, bread, ...")
-            <input
-              type="text"
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <input type="submit" />
-        </div>
-      </form>
-
+      <Form
+        currentDifficulty={difficulty}
+        budgetFilters={budgetFilters}
+        handleDifficultyFilterChange={handleDifficultyFilterChange}
+        handleBudgetFilterChange={handleBudgetFilterChange}
+        handleSubmit={handleSubmit}
+        handleSearchChange={handleSearchChange}
+      />
       {shouldDiplayLoader() && <div>Loading...</div>}
       {shouldDisplayError() && <div>{error}</div>}
       {shouldDisplayTable() && (
@@ -144,7 +108,7 @@ const Recipes = () => {
             onPageChange={(e) => handlePageChange(e.selected)}
             pageRangeDisplayed={5}
             pageCount={pageCount}
-            forcePage={currentPage - 1 }
+            forcePage={currentPage - 1}
             previousLabel="< previous"
             renderOnZeroPageCount={null}
           />
