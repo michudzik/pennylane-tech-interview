@@ -10,31 +10,63 @@ RSpec.describe Recipes::SearchService do
       end
     end
 
-    context 'when search string is provided' do
-      let!(:recipe_1) { create(:recipe) }
-      let!(:recipe_2) { create(:recipe) }
+    describe 'text matching' do
+      context 'when search string does not match any of the recipes' do
+        let!(:recipe_1) { create(:recipe) }
+        let!(:recipe_2) { create(:recipe) }
 
-      let!(:ingredient_1) { create(:ingredient, recipe_id: recipe_1.id, name: '150g of orange') }
-      let!(:ingredient_2) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of sugar') }
+        let!(:ingredient_1) { create(:ingredient, recipe_id: recipe_1.id, name: '150g of banana') }
+        let!(:ingredient_2) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of sugar') }
 
-      it 'returns only recipes which ingredients match the search string' do
-        query = { ingredients: 'orange' }
+        it 'does not return any recipe' do
+          query = { ingredients: 'orange' }
 
-        expect(subject.call(Recipe.all, query)).to match_array [recipe_1]
+          expect(subject.call(Recipe.all, query)).to eq []
+        end
+      end
+
+      context 'when search string is provided' do
+        let!(:recipe_1) { create(:recipe) }
+        let!(:recipe_2) { create(:recipe) }
+
+        let!(:ingredient_1) { create(:ingredient, recipe_id: recipe_1.id, name: '150g of orange') }
+        let!(:ingredient_2) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of sugar') }
+
+        it 'returns only recipes which ingredients match the search string' do
+          query = { ingredients: 'orange' }
+
+          expect(subject.call(Recipe.all, query)).to match_array [recipe_1]
+        end
+      end
+
+      context 'when mutiple ingredients are provided' do
+        let!(:recipe_1) { create(:recipe) }
+        let!(:recipe_2) { create(:recipe) }
+
+        let!(:ingredient_1) { create(:ingredient, recipe_id: recipe_1.id, name: '150g of orange') }
+        let!(:ingredient_2) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of sugar') }
+
+        it 'returns recipes which match either ingredient' do
+          query = { ingredients: 'orange, sugar' }
+
+          expect(subject.call(Recipe.all, query)).to match_array [recipe_1, recipe_2]
+        end
       end
     end
 
-    context 'when mutiple ingredients are provided' do
+    describe 'order' do
       let!(:recipe_1) { create(:recipe) }
       let!(:recipe_2) { create(:recipe) }
 
       let!(:ingredient_1) { create(:ingredient, recipe_id: recipe_1.id, name: '150g of orange') }
-      let!(:ingredient_2) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of sugar') }
+      let!(:ingredient_2) { create(:ingredient, recipe_id: recipe_1.id, name: '150g of sugar') }
+      let!(:ingredient_3) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of sugar') }
+      let!(:ingredient_4) { create(:ingredient, recipe_id: recipe_2.id, name: '150g of banana') }
 
-      it 'returns recipes which match either ingredient' do
-        query = { ingredients: 'orange, sugar' }
+      it 'returns the most relevant recipe first' do
+        query = { ingredients: 'sugar, banana' }
 
-        expect(subject.call(Recipe.all, query)).to match_array [recipe_1, recipe_2]
+        expect(subject.call(Recipe.all, query)).to match_array [recipe_2, recipe_1]
       end
     end
   end
