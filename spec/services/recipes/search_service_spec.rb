@@ -52,6 +52,24 @@ RSpec.describe Recipes::SearchService do
           expect(subject.call(Recipe.all, query)).to match_array [recipe_1, recipe_2]
         end
       end
+
+      context 'it allows to search by multi-word ingredients' do
+        let!(:recipe) { create(:recipe) }
+
+        let!(:ingredient_1) { create(:ingredient, recipe_id: recipe.id, name: '1/2 orange') }
+
+        it 'returns recipes which match either ingredient' do
+          query = { ingredients: '1/2 orange' }
+
+          expect(subject.call(Recipe.all, query)).to match_array [recipe]
+        end
+
+        it 'does not throw an error' do
+          query = { ingredients: '1/2 orange' }
+
+          expect { subject.call(Recipe.all, query) }.not_to raise_error
+        end
+      end
     end
 
     describe 'order' do

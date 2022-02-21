@@ -34,6 +34,11 @@ class Recipes::SearchService
     text
       .split(',')
       .map(&:strip)
+      .map do |element|
+        next element unless element.match?(/\s+/)
+
+        "'#{element}'"
+      end
       .join(' | ')
   end
 end
