@@ -17,7 +17,7 @@ class Recipes::SearchService
   def query_through_ingredients(query)
     return @scope if query[:ingredients].blank?
 
-    @scope
+    ids = @scope
       .joins('RIGHT OUTER JOIN ingredients ON recipes.id = ingredients.recipe_id')
       .where("to_tsvector('french', ingredients.name) @@ to_tsquery(:query)", query: query_string(query[:ingredients]))
       .order(
@@ -27,7 +27,8 @@ class Recipes::SearchService
             query_string(query[:ingredients])
           ]
         )
-      )
+      ).ids
+    @scope.klass.where(id: ids)
   end
 
   def query_string(text)
