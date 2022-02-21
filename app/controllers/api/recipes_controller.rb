@@ -4,7 +4,7 @@ module Api
       recipe_scope = filter_service.call(scope, permitted_params)
       recipe_scope = search_service.call(recipe_scope, permitted_params)
 
-      pagy, records = pagy(recipe_scope)
+      pagy, records = pagy(recipe_scope.includes(:tags, :author, :image, :ingredients))
 
       render :index, locals: { recipes: recipe_presenter.call(records), pagination: pagy }
     end
@@ -16,7 +16,7 @@ module Api
     end
 
     def scope
-      ::Recipe.includes(:tags, :author, :image, :ingredients).all
+      ::Recipe.all
     end
 
     def filter_service
